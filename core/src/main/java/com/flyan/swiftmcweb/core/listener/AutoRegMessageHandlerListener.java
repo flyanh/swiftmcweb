@@ -1,5 +1,6 @@
 package com.flyan.swiftmcweb.core.listener;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.flyan.swiftmcweb.core.annotation.MessageHandleFunc;
 import com.flyan.swiftmcweb.core.annotation.MessageHandleService;
@@ -34,13 +35,15 @@ public class AutoRegMessageHandlerListener implements ApplicationListener<Contex
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
-        String[] beanNames = applicationContext.getBeanNamesForAnnotation(MessageHandleService.class);
-        if(beanNames == null) {
+
+        /* 初始化消息通信上下文环境 */
+        String[] messageHandleServiceBeanNames = applicationContext.getBeanNamesForAnnotation(MessageHandleService.class);
+        if(ArrayUtil.isEmpty(messageHandleServiceBeanNames)) {
             return;
         }
 
-        for (String beanName : beanNames) {
-            if(applicationContext.getBean(beanName) instanceof BaseMessageHandleService messageHandleService) {
+        for (String beanName : messageHandleServiceBeanNames) {
+            if (applicationContext.getBean(beanName) instanceof BaseMessageHandleService messageHandleService) {
                 var serviceName = messageHandleService.getClass().getAnnotation(MessageHandleService.class).service();
                 log.info("[{}] message handle service has been registered", serviceName);
                 /* 注册消息处理服务以及为该服务注册消息处理函数表 */
@@ -51,7 +54,7 @@ public class AutoRegMessageHandlerListener implements ApplicationListener<Contex
                     MessageHandleFunc annotation = func.getAnnotation(MessageHandleFunc.class);
                     messageHandleFuncTable.registerHandleFunc(serviceName, annotation.messtype(), func);
                     /* 校验白名单配置 */
-                    if(!annotation.auth()) {
+                    if (!annotation.auth()) {
                         context.addAuthWhiteListEntry(serviceName, annotation.messtype());
                     }
                 }

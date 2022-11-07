@@ -1,5 +1,6 @@
 package com.flyan.swiftmcweb.demo.biz.file.controller;
 
+import com.flyan.swiftmcweb.core.annotation.OriginApi;
 import com.flyan.swiftmcweb.demo.biz.file.service.FileUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class FileUploadController {
      * @response    "file_pretty_key"
      */
     @PostMapping("/upload")
+    @OriginApi(auth = false)
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         return fileUploadService.uploadFile(file);
     }

@@ -26,7 +26,7 @@
 </dependencies>
 ```
 
-- 实现`SWIFTMCWEB`提供的用户验证接口`SwiftmcwebAuthManager`，若未实现，将会使用默认的实现。
+- 实现`SWIFTMCWEB`提供的用户验证接口`SwiftmcwebAuthManager`，若未实现，将会导致启动失败。
 
 ```java
 package com.flyan.swiftmcweb.core.web.manager;
@@ -296,6 +296,8 @@ npm run dev
 
 - Q: 你这框架看着好像只能写普通接口，上传文件等特殊功能接口怎么办？
 - A: 是的，`SWIFTMCWEB`只为开发`api`，但它基于`springweb`，并且以上的功能都是无侵入的，你完全可以使用原生的`springweb`来完成这些许特殊需求，但这些接口都会被要求使用`token`
-  请求头来进行身份验证（之后版本考虑开放可配置选项）。
+  请求头来进行身份验证（如果使用@OriginApi并设置auth=false则可以不进行身份验证，谨慎使用！）。
+- Q: `SWIFTMCWEB`的文档看起来非常简单，能否提供更详细的开发文档？
+- A: 会有的！工作比较忙，我会抓紧时间更新！感兴趣的务必先看看`demo`，这些代码很好的展示了`SWIFTMCWEB`的能力！
 
 
